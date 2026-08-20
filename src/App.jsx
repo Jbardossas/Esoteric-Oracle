@@ -1,588 +1,536 @@
 import React, { useState } from 'react';
-import { 
-  Sparkles, Volume2, VolumeX, Copy, RotateCcw, ArrowRight, 
-  Eye, Moon, Zap, Sun, Star, Wind, Flame, Droplets, 
-  Mountain, Compass, Anchor, Key, Lock, Shield, Sword, 
-  Feather, Hourglass, Infinity, Cloud, Waves, Leaf, Circle, Hexagon
-} from 'lucide-react';
+import { Sparkles, Moon, Sun, Flame, Eye } from 'lucide-react';
 
-// --- Expanded Oracle Knowledge Base ---
-const ORACLE_DECK = [
+const esotericDeck = [
   {
-    id: 'celestial-eye',
-    name: 'The Celestial Eye',
-    theme: 'Clarity & Unveiled Truths',
-    symbol: Eye,
-    imagery: 'A glowing iris suspended in an endless nebula, shedding light on hidden pathways.',
-    insights: [
-      'An illusion you have been holding onto is beginning to fracture.',
-      'True vision requires stepping back from immediate emotional reactions.',
-      'The path forward is illuminated only when you are willing to see things as they are.'
-    ],
-    takeaway: 'Pause before making your next decision. Write down what you know to be factual versus what you fear might happen.',
-    question: 'What truth have you been avoiding out of comfort?'
+    id: 1,
+    emblem: "The Threshold",
+    vision: "A shimmering gateway of polished obsidian standing at the edge of a familiar forest, humming with a low, resonant frequency.",
+    insights: ["Departure from the known", "Embracing necessary discomfort", "The shedding of old identities"],
+    takeaway: "Step forward without looking back; the current friction is the friction of growth.",
+    reflection: "What comfortable illusion are you hesitating to leave behind?"
   },
   {
-    id: 'void-weaver',
-    name: 'The Void Weaver',
-    theme: 'Patience & The Fertile Unknown',
-    symbol: Moon,
-    imagery: 'Silver threads spinning out of complete darkness, forming a delicate, cosmic web.',
-    insights: [
-      'Empty space is not a lack of progress; it is the canvas for creation.',
-      'Forcing a resolution now will entangle the threads of your intention.',
-      'There is power in resting within the liminal space between what was and what will be.'
-    ],
-    takeaway: 'Allow yourself a period of deliberate non-action. Let the situation breathe and organize itself before you intervene.',
-    question: 'How can you find peace in not knowing the immediate outcome?'
+    id: 2,
+    emblem: "The Abyss",
+    vision: "A starless, subterranean lake perfectly mirroring the darkness above, requiring a quiet leap of faith to cross.",
+    insights: ["Confronting shadow aspects", "Surrender to the void", "Ego dissolution"],
+    takeaway: "Do not fight the descent. Deep revelation only occurs in the quiet absence of light.",
+    reflection: "Where are you expending energy fighting a necessary ending?"
   },
   {
-    id: 'golden-thread',
-    name: 'The Golden Thread',
-    theme: 'Synchronicity & Connection',
-    symbol: Zap,
-    imagery: 'A single, brilliantly illuminated golden strand weaving through shattered fragments of stone.',
-    insights: [
-      'Seemingly random events are aligning to guide you toward your designated coordinate.',
-      'A connection you previously overlooked holds the key to your current friction.',
-      'Trust the sudden sparks of intuition; they are the thread pulling you forward.'
-    ],
-    takeaway: 'Reach out to someone who has unexpectedly crossed your mind today, or revisit an old idea that suddenly feels relevant.',
-    question: 'Where are you resisting the natural flow of your life?'
+    id: 3,
+    emblem: "The Boon",
+    vision: "A glowing, crystalline seed resting in the palm of an open hand, radiating a warm, golden pulse.",
+    insights: ["Integration of lessons", "Reclaiming lost power", "The gift of earned wisdom"],
+    takeaway: "Recognize the strength you have forged in the fire; it is now yours to wield.",
+    reflection: "How can you apply your hardest-earned lesson to today's challenge?"
   },
   {
-    id: 'solar-forge',
-    name: 'The Solar Forge',
-    theme: 'Transformation & Crucible',
-    symbol: Sun,
-    imagery: 'A blinding crucible of starlight melting down iron chains into liquid gold.',
-    insights: [
-      'The heat you are experiencing is not destroying you; it is refining you.',
-      'Old identities must be burned away to make room for your next iteration.',
-      'Friction is the required catalyst for this specific manifestation.'
-    ],
-    takeaway: 'Stop fighting the discomfort. Identify one habit you can let go of today that no longer serves your growth.',
-    question: 'What part of yourself are you desperately trying to save from the fire?'
+    id: 4,
+    emblem: "The Mentor's Flame",
+    vision: "A solitary lantern suspended in a misty expanse, casting long, guiding shadows across an invisible path.",
+    insights: ["Unexpected guidance", "Trusting inner intuition", "The arrival of synchronous help"],
+    takeaway: "Listen to the quiet voice beneath the noise. The teacher appears when the space is cleared.",
+    reflection: "Who or what is trying to offer you wisdom that you are currently ignoring?"
   },
   {
-    id: 'astral-compass',
-    name: 'The Astral Compass',
-    theme: 'Direction & Inner Knowing',
-    symbol: Compass,
-    imagery: 'A floating brass instrument where the needle points inward toward the observer.',
-    insights: [
-      'External advice is drowning out your internal navigation system.',
-      'The "logical" choice may be in direct opposition to your authentic alignment.',
-      'You already know the answer; you are just waiting for permission to act on it.'
-    ],
-    takeaway: 'Cancel one external consultation or advice-seeking session today. Sit quietly for ten minutes and ask yourself the question instead.',
-    question: 'Whose permission are you waiting for?'
+    id: 5,
+    emblem: "The Refusal",
+    vision: "A heavy iron anchor buried deep in dry sand, tethered to a ship that longs for the ocean.",
+    insights: ["Stagnation through fear", "Denial of one's calling", "The weight of safety"],
+    takeaway: "Delaying the inevitable only amplifies the current of unrest. You cannot unhear the call.",
+    reflection: "Where are you playing small to keep others, or yourself, comfortable?"
   },
   {
-    id: 'obsidian-anchor',
-    name: 'The Obsidian Anchor',
-    theme: 'Grounding & Reality',
-    symbol: Anchor,
-    imagery: 'A massive, dark glass anchor embedded deep within the bedrock of a glowing core.',
-    insights: [
-      'Your mind is drifting too far into future anxieties or past regrets.',
-      'You cannot build a stable structure on the shifting sands of "what if".',
-      'Physical embodiment is required to process the current energetic load.'
-    ],
-    takeaway: 'Do something strictly physical today: walk barefoot on grass, lift heavy objects, or cook a meal from scratch.',
-    question: 'How are you escaping your present physical reality?'
+    id: 6,
+    emblem: "The Road of Trials",
+    vision: "A winding, fractured staircase ascending a sheer cliff, where each step requires total presence.",
+    insights: ["Testing of resolve", "Purification through difficulty", "Sustained focus"],
+    takeaway: "The obstacles are not blocking the path; they are the material the path is made of.",
+    reflection: "How can you view your current frustration as a necessary refinement?"
   },
   {
-    id: 'crystalline-key',
-    name: 'The Crystalline Key',
-    theme: 'Access & Breakthrough',
-    symbol: Key,
-    imagery: 'A translucent, humming key turning in an invisible lock suspended in mid-air.',
-    insights: [
-      'A door you thought was permanently sealed is preparing to open.',
-      'The barrier in front of you requires a shift in perspective, not more force.',
-      'You now have the necessary clearance to access the next level of your journey.'
-    ],
-    takeaway: 'Revisit a problem you abandoned months ago. The missing piece you needed is now in your possession.',
-    question: 'What old assumption is acting as a locked door in your mind?'
+    id: 7,
+    emblem: "The Atonement",
+    vision: "Two vast, celestial spheres slowly overlapping into a perfect eclipse, creating a crown of brilliant light.",
+    insights: ["Reconciliation of opposites", "Forgiving the origin", "Meeting the source of power"],
+    takeaway: "You must make peace with the forces that shaped you before you can reshape yourself.",
+    reflection: "What past conflict must be neutralized for you to step fully into your autonomy?"
   },
   {
-    id: 'aetheric-shield',
-    name: 'The Aetheric Shield',
-    theme: 'Boundaries & Protection',
-    symbol: Shield,
-    imagery: 'A hexagonal grid of violet light deflecting shadows back into the void.',
-    insights: [
-      'Your energy is leaking into environments or relationships that do not replenish you.',
-      'Saying "no" is an act of preservation, not an act of hostility.',
-      'You are absorbing frequencies that do not belong to you.'
-    ],
-    takeaway: 'Audit your current commitments. Cancel or decline one obligation this week that feels draining rather than expansive.',
-    question: 'Where are you sacrificing your peace to keep someone else comfortable?'
+    id: 8,
+    emblem: "The Two Worlds",
+    vision: "A figure standing effortlessly on the surface of deep water, reflecting both the stormy sky and the calm depths.",
+    insights: ["Mastery of duality", "Living in the material and spiritual", "Grounded transcendence"],
+    takeaway: "You do not need to choose between the sacred and the mundane; breathe them into one reality.",
+    reflection: "How can you bring your highest spiritual insights into your daily, physical routines?"
   },
   {
-    id: 'severed-knot',
-    name: 'The Severed Knot',
-    theme: 'Release & Finality',
-    symbol: Sword,
-    imagery: 'A glowing blade cleanly slicing through an impossibly tangled mass of dark roots.',
-    insights: [
-      'Negotiation with this specific obstacle is no longer viable.',
-      'A clean break is required to restore your operational baseline.',
-      'Prolonging the ending only amplifies the collateral damage.'
-    ],
-    takeaway: 'Identify a situation where you are endlessly compromising. Make a definitive, non-negotiable decision to cut it off.',
-    question: 'What are you holding onto simply because you are used to the weight?'
+    id: 9,
+    emblem: "The Shapeshifter",
+    vision: "A mirror made of quicksilver, constantly shifting its surface to reflect different versions of the watcher.",
+    insights: ["Adaptability", "Questioning fixed realities", "The illusion of permanence"],
+    takeaway: "Do not cling to a rigid definition of who you are. Flow into the form the moment requires.",
+    reflection: "What label are you currently wearing that has become too tight for your spirit?"
   },
   {
-    id: 'falling-feather',
-    name: 'The Falling Feather',
-    theme: 'Surrender & Grace',
-    symbol: Feather,
-    imagery: 'A single, luminescent feather drifting slowly downward against a turbulent storm.',
-    insights: [
-      'You are expending too much energy trying to control variables beyond your reach.',
-      'Gravity will do the work if you stop flapping your wings in a panic.',
-      'Softness is a valid and powerful response to harsh conditions.'
-    ],
-    takeaway: 'When you feel the urge to micromanage a situation today, consciously take a step back and let it unfold naturally.',
-    question: 'Where are you gripping the steering wheel too tightly?'
+    id: 10,
+    emblem: "The Oracle's Whisper",
+    vision: "A single, pure note echoing through a grand, empty canyon, vibrating the very stones.",
+    insights: ["A sudden realization", "The clarity of emptiness", "A message from the ether"],
+    takeaway: "Silence your active mind. The answer you seek has already been spoken in the spaces between your thoughts.",
+    reflection: "If you stopped asking the question, what answer would naturally arise?"
   },
   {
-    id: 'shifting-sands',
-    name: 'The Shifting Sands',
-    theme: 'Time & Impermanence',
-    symbol: Hourglass,
-    imagery: 'An hourglass where the sand flows upwards, defying gravity and logic.',
-    insights: [
-      'Your perception of being "too late" or "behind schedule" is an artificial construct.',
-      'The current phase is temporary; do not build a permanent monument to a passing mood.',
-      'Time is bending to accommodate your actual needs, not your ego\'s timeline.'
-    ],
-    takeaway: 'Remove a self-imposed deadline that is causing you unnecessary stress. Reassess the timeline based on reality, not pressure.',
-    question: 'What would you do right now if you believed you had all the time in the world?'
+    id: 11,
+    emblem: "The Cosmic Loom",
+    vision: "Infinite threads of glowing gold weaving themselves into a massive, expanding tapestry in a dark void.",
+    insights: ["Interconnectedness", "Trusting the larger pattern", "Fate meeting free will"],
+    takeaway: "You are both the weaver and the thread. Your smallest actions are pulling vast realities into existence.",
+    reflection: "Where do you need to trust that the chaotic threads of your life are forming a design?"
   },
   {
-    id: 'ouroboros-ring',
-    name: 'The Ouroboros Ring',
-    theme: 'Cycles & Repetition',
-    symbol: Infinity,
-    imagery: 'A serpent made of starlight consuming its own tail, creating a perpetual energy loop.',
-    insights: [
-      'You have arrived at this exact lesson before, wearing different circumstances.',
-      'The cycle will repeat until the fundamental behavioral pattern is altered.',
-      'Endings and beginnings are happening simultaneously right now.'
-    ],
-    takeaway: 'Identify the recurring theme in your current frustration. Choose one completely different reaction to break the loop.',
-    question: 'How is this situation a mirror of something you experienced years ago?'
+    id: 12,
+    emblem: "The Silent Watcher",
+    vision: "A massive, unblinking eye carved into the side of a quiet mountain, ancient and entirely at peace.",
+    insights: ["Detachment from drama", "Pure observation", "Releasing the need to control"],
+    takeaway: "Step back from the stage. You are not the emotions you feel; you are the awareness observing them.",
+    reflection: "What immediate reaction can you replace with calm, neutral observation?"
   },
   {
-    id: 'nebula-cloud',
-    name: 'The Nebula Cloud',
-    theme: 'Confusion & Gestation',
-    symbol: Cloud,
-    imagery: 'A dense, impenetrable cloud of colorful cosmic dust hiding newborn stars.',
-    insights: [
-      'Clarity is unavailable right now because the components are still forming.',
-      'Demanding answers in the midst of the fog will only lead to false conclusions.',
-      'Confusion is a necessary phase of profound intellectual or spiritual upgrades.'
-    ],
-    takeaway: 'Accept the feeling of being lost for the next 24 hours. Do not attempt to "figure it out"; just exist in the mystery.',
-    question: 'Can you tolerate being a beginner again?'
+    id: 13,
+    emblem: "The Sovereign Crown",
+    vision: "A heavy circlet of forged iron and raw amethyst, resting on an empty, stone throne.",
+    insights: ["Radical responsibility", "Owning your authority", "Refusing victimhood"],
+    takeaway: "Your power is waiting for you to claim it, but you must stop asking for permission to rule your own realm.",
+    reflection: "In what area of your life are you waiting for someone else to save you?"
   },
   {
-    id: 'tidal-force',
-    name: 'The Tidal Force',
-    theme: 'Emotion & Flow',
-    symbol: Waves,
-    imagery: 'Massive, slow-moving waves of bioluminescent water pulling back from the shore.',
-    insights: [
-      'A surge of unprocessed emotion is preparing to make landfall.',
-      'Attempting to build walls against the tide will result in structural failure.',
-      'You must dive under the wave to avoid taking the full impact on the surface.'
-    ],
-    takeaway: 'Schedule time to process what you are feeling safely. Write, cry, or speak it out loud without filtering yourself.',
-    question: 'What emotion have you categorized as "inconvenient" lately?'
+    id: 14,
+    emblem: "The Fractured Vessel",
+    vision: "A clay jar cracked down the center, radiating a blinding white light from its broken seams.",
+    insights: ["The beauty of imperfection", "Grace entering through wounds", "Vulnerability as strength"],
+    takeaway: "Do not hide your fractures. The breaks in your armor are exactly where the highest light enters.",
+    reflection: "How can you reframe a perceived flaw into a unique source of spiritual strength?"
   },
   {
-    id: 'emerald-sprout',
-    name: 'The Emerald Sprout',
-    theme: 'Growth & Vulnerability',
-    symbol: Leaf,
-    imagery: 'A fragile, bright green shoot pushing its way through solid, cracked concrete.',
-    insights: [
-      'New beginnings require you to be small and vulnerable for a time.',
-      'The environment is harsh, but your internal drive to grow is stronger.',
-      'Do not compare your day-one progress to someone else\'s harvest season.'
-    ],
-    takeaway: 'Acknowledge one small, incremental step you took today. Protect your new ideas from cynical critics until they are established.',
-    question: 'Where are you expecting a forest when you only just planted the seed?'
+    id: 15,
+    emblem: "The Eternal Return",
+    vision: "A serpent formed of starlight peacefully consuming its own tail, spinning endlessly like a galaxy.",
+    insights: ["Cycles of time", "Repeating lessons", "The illusion of endings"],
+    takeaway: "You have been here before, and you will be here again. Endings are merely the raw material for beginnings.",
+    reflection: "What recurring pattern in your life is asking to finally be mastered?"
   },
   {
-    id: 'whispering-wind',
-    name: 'The Whispering Wind',
-    theme: 'Communication & Subtlety',
-    symbol: Wind,
-    imagery: 'Invisible currents bending the tops of ancient, monolithic trees in unison.',
-    insights: [
-      'The message you need is being delivered quietly; you must lower the noise to hear it.',
-      'How you say it is currently more important than what you are saying.',
-      'Information is traveling fast behind the scenes.'
-    ],
-    takeaway: 'Listen more than you speak in your next interaction. Pay attention to body language and the words left unsaid.',
-    question: 'What is the subtle whisper you have been ignoring?'
+    id: 16,
+    emblem: "The Alchemist's Crucible",
+    vision: "A cast-iron vessel suspended over blue flames, where heavy lead slowly boils into vapor and solidifies into gold.",
+    insights: ["The heat of transformation", "Enduring the process", "Refining your essence"],
+    takeaway: "The intense pressure you feel is not here to destroy you; it is here to purify you. Stay in the fire.",
+    reflection: "What unrefined part of your ego is currently being burned away?"
   },
   {
-    id: 'twin-flames',
-    name: 'The Twin Flames',
-    theme: 'Partnership & Mirroring',
-    symbol: Flame,
-    imagery: 'Two distinct fires burning side-by-side, their heat combining into a single pillar of white light.',
-    insights: [
-      'Another person is reflecting your own unresolved traits back to you.',
-      'True collaboration requires two whole individuals, not two halves seeking completion.',
-      'Friction in a partnership is highlighting where you both need to expand.'
-    ],
-    takeaway: 'Instead of criticizing someone else\'s behavior today, ask yourself where that exact trait exists within your own life.',
-    question: 'What does this person trigger in you that you have not yet healed?'
+    id: 17,
+    emblem: "The Labyrinth",
+    vision: "An ancient, winding maze of high hedges. The path seems to lead away from the center, yet it is the only way in.",
+    insights: ["Trusting the indirect route", "Patience with the journey", "The illusion of being lost"],
+    takeaway: "You are not off track, even when it feels like you are moving backward. Keep walking the spiral.",
+    reflection: "Where are you demanding a straight line in a situation that requires a curved path?"
   },
   {
-    id: 'deep-well',
-    name: 'The Deep Well',
-    theme: 'Resources & Reserves',
-    symbol: Droplets,
-    imagery: 'A dark, stone well echoing with the sound of a single drop of pure, glowing water.',
-    insights: [
-      'You are operating on auxiliary power; your primary reserves are dangerously low.',
-      'You must descend into your depths to locate the source of your true energy.',
-      'Superficial fixes will not quench the profound thirst you are experiencing.'
-    ],
-    takeaway: 'Prioritize deep, restorative rest over superficial entertainment tonight. Go to sleep earlier than usual.',
-    question: 'Where are you pouring your energy out faster than you can replenish it?'
+    id: 18,
+    emblem: "The Arid Desert",
+    vision: "A vast expanse of white sand under a brilliant, relentless sun. No distractions, no hiding places, only the horizon.",
+    insights: ["Isolation for clarity", "Stripping away the excess", "A thirst for true meaning"],
+    takeaway: "Embrace the emptiness. This dry spell is starving the distractions so your true desires can speak.",
+    reflection: "What is this period of isolation or stillness trying to show you about yourself?"
   },
   {
-    id: 'silent-peak',
-    name: 'The Silent Peak',
-    theme: 'Perspective & Achievement',
-    symbol: Mountain,
-    imagery: 'A jagged, snow-capped summit standing entirely above a thick blanket of storm clouds.',
-    insights: [
-      'You have climbed high enough to see that the previous drama was microscopic.',
-      'The air is thinner here; you cannot carry the same baggage you brought from the valley.',
-      'Take a moment to recognize the altitude you have achieved before looking for the next mountain.'
-    ],
-    takeaway: 'Write down three things you have accomplished in the last year that your past self would be amazed by.',
-    question: 'Are you so focused on the climb that you forgot to look at the view?'
+    id: 19,
+    emblem: "The Hidden Oasis",
+    vision: "A sudden burst of emerald palms and cool, clear water springing from the center of barren earth.",
+    insights: ["Unexpected grace", "Nourishment for the weary", "Recognizing small miracles"],
+    takeaway: "Drink deeply of the respite you have been given. Rest is a necessary phase of the great work.",
+    reflection: "How can you better receive the grace and support that is being offered to you right now?"
   },
   {
-    id: 'iron-lock',
-    name: 'The Iron Lock',
-    theme: 'Restriction & Security',
-    symbol: Lock,
-    imagery: 'A heavy, rusting padlock holding shut the gates to an overgrown, forgotten garden.',
-    insights: [
-      'What feels like a punishment or restriction is currently keeping you safe.',
-      'You are locked out because you are not yet equipped to handle what is inside.',
-      'Security can easily become a prison if left unexamined for too long.'
-    ],
-    takeaway: 'Accept a current limitation or delay as a form of cosmic protection. Stop rattling the doorknob.',
-    question: 'How is this perceived rejection actually a redirection?'
+    id: 20,
+    emblem: "The Chariot of Fire",
+    vision: "A gleaming chariot pulled by two contrasting beasts—one of shadow, one of light—moving in perfect, unified momentum.",
+    insights: ["Harnessing opposing forces", "Directed willpower", "Overcoming internal division"],
+    takeaway: "Stop fighting your contradictions. Command them to pull you forward toward your singular goal.",
+    reflection: "Where is your energy being drained by inner conflict, and how can you unite your focus?"
   },
   {
-    id: 'wandering-star',
-    name: 'The Wandering Star',
-    theme: 'Individuality & Defiance',
-    symbol: Star,
-    imagery: 'A solitary blue star moving in retrograde against the synchronized rotation of a golden galaxy.',
-    insights: [
-      'Your path does not map to the established constellations of your peers.',
-      'Deviation from the norm is your specific assignment, not a mistake.',
-      'You will be misunderstood; that is the price of authentic trajectory.'
-    ],
-    takeaway: 'Make a decision today based entirely on your own weird, specific preference, disregarding what is "normal".',
-    question: 'Where are you dimming your light to fit into a constellation that isn\'t yours?'
+    id: 21,
+    emblem: "The Sunken City",
+    vision: "Grand, ruined architecture lying peacefully at the bottom of a clear ocean, holding the secrets of a forgotten era.",
+    insights: ["Exploring the subconscious", "Reclaiming repressed memories", "The depth of the psyche"],
+    takeaway: "There are vast treasures hidden in the parts of yourself you have submerged. Dive deep without fear.",
+    reflection: "What old dream or forgotten part of yourself is asking to be resurfaced?"
   },
   {
-    id: 'perfect-circle',
-    name: 'The Perfect Circle',
-    theme: 'Wholeness & Integration',
-    symbol: Circle,
-    imagery: 'A flawless ring of pure white light expanding uniformly into the darkness.',
-    insights: [
-      'You already possess every component required for the next phase.',
-      'Stop searching for the missing piece; the work now is assembling what you have.',
-      'Accepting your shadow is what makes the geometry of your soul complete.'
-    ],
-    takeaway: 'Write down a perceived "flaw" you have. Brainstorm one way that exact trait has actually helped or protected you.',
-    question: 'Can you accept yourself exactly as you are in this very second?'
+    id: 22,
+    emblem: "The Celestial Navigator",
+    vision: "A brass astrolabe pointing toward a constellation that shines brighter than the rest of the night sky.",
+    insights: ["Guidance from a higher plane", "Looking beyond the immediate", "Trusting the unseen order"],
+    takeaway: "When the ground level is chaotic, look up. Your true north is written in the stars, not the dirt.",
+    reflection: "What higher principle or overarching goal can serve as your compass right now?"
   },
   {
-    id: 'quantum-hex',
-    name: 'The Quantum Hexagon',
-    theme: 'Structure & Manifestation',
-    symbol: Hexagon,
-    imagery: 'A three-dimensional geometric lattice materializing out of chaotic, swirling dust.',
-    insights: [
-      'Raw creative energy is useless until it is poured into a rigid structure.',
-      'You need better systems, not more inspiration.',
-      'Discipline is the grid upon which magic is actually constructed.'
-    ],
-    takeaway: 'Take 15 minutes today to organize your physical workspace or create a strict schedule for a project you have been putting off.',
-    question: 'Where is your lack of structure causing your energy to leak away?'
+    id: 23,
+    emblem: "The Iron Forge",
+    vision: "A heavy hammer striking glowing red steel on an anvil, sending a shower of bright sparks into the dark.",
+    insights: ["Active creation", "Striking while the energy is hot", "Shaping your own destiny"],
+    takeaway: "This is a moment for action, not contemplation. Use the heat of the moment to forge your reality.",
+    reflection: "What creative impulse or idea needs to be struck and shaped into existence today?"
+  },
+  {
+    id: 24,
+    emblem: "The Veiled Dancer",
+    vision: "A figure moving gracefully behind a sheer curtain, their rhythms unpredictable yet perfectly in tune with an unseen song.",
+    insights: ["The mystery of life's flow", "Surrendering control", "Embracing the unknown"],
+    takeaway: "You cannot choreograph every step. Let the rhythm of the universe move you without needing to see the whole stage.",
+    reflection: "Where do you need to stop planning and simply dance with what is happening?"
+  },
+  {
+    id: 25,
+    emblem: "The Silent Bell",
+    vision: "A massive, bronze temple bell hanging still in the air. The heavy wooden mallet is pulled back, waiting for the strike.",
+    insights: ["Anticipation of the new", "Unmanifested potential", "The power of the pause"],
+    takeaway: "Do not rush the climax. The moment before the action holds the concentrated power of all possibilities.",
+    reflection: "How can you sit comfortably in the tension of waiting for the right moment?"
+  },
+  {
+    id: 26,
+    emblem: "The Silver Mirror",
+    vision: "A perfectly polished disc of silver that reflects not your physical face, but the exact state of your soul.",
+    insights: ["Unflinching self-honesty", "Facing the true nature", "Piercing through self-deception"],
+    takeaway: "Look closely at what is triggering you in others; it is merely a reflection of your own internal landscape.",
+    reflection: "What uncomfortable truth about yourself is currently being mirrored by your environment?"
+  },
+  {
+    id: 27,
+    emblem: "The Rooted Tree",
+    vision: "An ancient oak with roots gripping deep into bedrock, holding fast while a violent storm bends its branches.",
+    insights: ["Extreme grounding", "Connecting to ancestry", "Standing firm in chaos"],
+    takeaway: "Do not try to fight the wind. Deepen your roots into your core values and let the storm pass over you.",
+    reflection: "What core belief or foundation is keeping you anchored right now?"
+  },
+  {
+    id: 28,
+    emblem: "The Wandering Fool",
+    vision: "A figure stepping joyfully off a cliff edge into the mist, carrying nothing but a small pouch and a white rose.",
+    insights: ["Beginner's mind", "A leap of absolute faith", "Holy innocence"],
+    takeaway: "The intellect cannot solve this. You must take the blind leap and trust that the universe will catch you.",
+    reflection: "Where is logic failing you, and where might a leap of faith serve you better?"
+  },
+  {
+    id: 29,
+    emblem: "The Weeping Stone",
+    vision: "A boulder in a dry canyon that continuously seeps clear, pure water, slowly carving a channel into the earth.",
+    insights: ["Emotional release", "Softening hard edges", "The quiet power of grief"],
+    takeaway: "Let the emotion flow. Suppressed tears turn to stone, but expressed feeling carves pathways for new life.",
+    reflection: "What heavy emotion have you been refusing to feel, and how can you give it a release valve?"
+  },
+  {
+    id: 30,
+    emblem: "The Golden Key",
+    vision: "An ornate, glowing key lying abandoned on a velvet pillow, waiting to unlock a door that has no visible handle.",
+    insights: ["Sudden access", "Hidden solutions", "Unlocking a new paradigm"],
+    takeaway: "The solution to your problem is not more force; it is a shift in perspective. The door is already unlocked.",
+    reflection: "What obvious solution are you overlooking because you are convinced the problem is difficult?"
+  },
+  {
+    id: 31,
+    emblem: "The Sleeping Dragon",
+    vision: "A massive, scaled beast coiled peacefully around a hoard of gold, breathing in a slow, rhythmic slumber.",
+    insights: ["Dormant power", "Knowing when to rest", "Conserving energy for the battle"],
+    takeaway: "Do not wake your fire for a minor skirmish. Rest deeply and hoard your energy for the true calling.",
+    reflection: "Are you wasting your profound energy on trivial arguments or distractions?"
+  },
+  {
+    id: 32,
+    emblem: "The Broken Sword",
+    vision: "A once-mighty blade snapped in two, the pieces laid gently on an altar surrounded by blooming white lilies.",
+    insights: ["Laying down arms", "Finding non-violent solutions", "The end of a long struggle"],
+    takeaway: "You cannot win this battle by fighting harder. Surrender the weapons of the ego and seek the path of peace.",
+    reflection: "What ongoing argument or internal war do you need to finally walk away from?"
+  },
+  {
+    id: 33,
+    emblem: "The Woven Basket",
+    vision: "A sturdy basket woven from diverse river reeds, filled to the brim with varied, colorful harvest fruits.",
+    insights: ["Gathering resources", "Holding space for others", "The strength of community"],
+    takeaway: "You do not have to hold everything in your own hands. Build a structure of support and rely on your weave.",
+    reflection: "Who in your community can you reach out to for support or collaboration?"
+  },
+  {
+    id: 34,
+    emblem: "The Endless River",
+    vision: "A powerful, rushing current of dark blue water that sweeps away debris and constantly reshapes the banks.",
+    insights: ["The state of flow", "Radical impermanence", "Letting go of the shore"],
+    takeaway: "Stop clinging to the rocks. The faster you accept that everything changes, the smoother the ride will be.",
+    reflection: "What outdated attachment are you desperately trying to hold onto in the current?"
+  },
+  {
+    id: 35,
+    emblem: "The Mountain Peak",
+    vision: "The summit of a great mountain piercing through a sea of clouds, offering a perfectly clear, 360-degree view.",
+    insights: ["Higher perspective", "Achieving a long-sought goal", "Seeing the broader landscape"],
+    takeaway: "You have climbed above the heavy weather. Take a moment to breathe the thin air and admire how far you have come.",
+    reflection: "When you look at your life from the highest possible altitude, what truly matters?"
+  },
+  {
+    id: 36,
+    emblem: "The Hollow Bone",
+    vision: "A sun-bleached bone lying in the desert, hollowed out by the wind, acting as a perfect flute for the universe.",
+    insights: ["Becoming a vessel", "Clearing personal ego", "Channeled wisdom"],
+    takeaway: "Empty yourself of preconceptions and opinions. You must become a clear channel for the work to flow through you.",
+    reflection: "What personal bias is clogging the channel of your intuition?"
+  },
+  {
+    id: 37,
+    emblem: "The Ghost Ship",
+    vision: "A grand galleon drifting silently through fog, its sails torn, carrying cargo for a destination that no longer exists.",
+    insights: ["Letting go of dead dreams", "Releasing phantom obligations", "Moving on"],
+    takeaway: "You are spending energy maintaining a vessel that has already sailed. Let the ghost ship drift into the mist.",
+    reflection: "What outdated goal are you still dutifully working toward out of sheer habit?"
+  },
+  {
+    id: 38,
+    emblem: "The Crimson Thread",
+    vision: "A single, glowing red thread woven through a chaotic tangle of gray yarn, leading somewhere unseen.",
+    insights: ["Following the subtle clue", "The pull of destiny", "Trusting the breadcrumbs"],
+    takeaway: "Do not try to untangle the whole knot. Just hold onto the one thread that feels true and follow where it leads.",
+    reflection: "What is the one small thing that feels unquestionably right in your life right now?"
+  },
+  {
+    id: 39,
+    emblem: "The Obsidian Dagger",
+    vision: "A blade carved from volcanic glass, sharp enough to cut through illusion without causing unnecessary pain.",
+    insights: ["Severing energetic ties", "Setting firm boundaries", "The mercy of the cut"],
+    takeaway: "It is time to make a clean, precise cut. Prolonging the connection is only causing a slow drain on your spirit.",
+    reflection: "What relationship or commitment needs to be swiftly and permanently severed?"
+  },
+  {
+    id: 40,
+    emblem: "The Starless Night",
+    vision: "Total, suffocating darkness. There is no moon, there are no stars, only the sound of your own heartbeat.",
+    insights: ["The dark night of the soul", "Faith without evidence", "The gestation period"],
+    takeaway: "You cannot see the way forward because you are currently the seed buried in the soil. Trust the darkness.",
+    reflection: "Can you surrender to the unknown without panicking or forcing a false light?"
+  },
+  {
+    id: 41,
+    emblem: "The Blooming Lotus",
+    vision: "A pristine, white flower opening its petals perfectly, completely unsullied by the thick, black mud it grew from.",
+    insights: ["Spiritual awakening", "Transmuting trauma into beauty", "Inherent purity"],
+    takeaway: "Your difficult past is not a stain on your soul; it is the exact nutrient-rich soil required for your current blossoming.",
+    reflection: "How has your greatest struggle directly contributed to your most beautiful quality?"
+  },
+  {
+    id: 42,
+    emblem: "The Iron Gate",
+    vision: "A heavy, rusted portcullis slammed shut across a mountain pass, guarded by silence.",
+    insights: ["A hard boundary", "Protection of sacred energy", "A clear 'No' from the universe"],
+    takeaway: "Stop rattling the bars. The gate is closed for your protection, redirecting you toward a path of lesser resistance.",
+    reflection: "What closed door are you still hopelessly trying to pry open?"
+  },
+  {
+    id: 43,
+    emblem: "The Twin Flames",
+    vision: "Two fires burning on opposite peaks, flashing in perfect unison, communicating a silent language.",
+    insights: ["Divine mirroring", "Intense soul connection", "The alchemical wedding"],
+    takeaway: "Pay attention to the person who triggers you the most; they are holding up a perfect mirror to your unhealed self.",
+    reflection: "What is your deepest frustration with another person teaching you about yourself?"
+  },
+  {
+    id: 44,
+    emblem: "The Empty Chalice",
+    vision: "A goblet forged of silver, wiped completely clean and held upright, waiting to be filled.",
+    insights: ["Total receptivity", "Unlearning", "Making space for the new"],
+    takeaway: "You cannot learn what you think you already know. Empty your cup so the universe can pour something fresh into it.",
+    reflection: "What firmly held belief are you willing to put aside to receive new wisdom?"
+  },
+  {
+    id: 45,
+    emblem: "The Roaring Fire",
+    vision: "A wild, untamed bonfire consuming dry brush, radiating immense heat and casting wild shadows.",
+    insights: ["Passion unleashed", "Destruction of the old", "Wild, creative energy"],
+    takeaway: "Do not apologize for your intensity. Let the fire burn hot and consume everything that is no longer true.",
+    reflection: "Where are you dampening your own fire to make others feel more comfortable?"
+  },
+  {
+    id: 46,
+    emblem: "The Silent Scribe",
+    vision: "A figure cloaked in gray, quietly writing in a massive ledger with a quill, observing everything, judging nothing.",
+    insights: ["Recording reality", "Non-interference", "Taking accurate inventory"],
+    takeaway: "Step out of the drama and simply document what is happening. The facts alone will reveal the next step.",
+    reflection: "If you removed all emotion from your current situation, what are the bare facts?"
+  },
+  {
+    id: 47,
+    emblem: "The Falling Tower",
+    vision: "A stone tower struck by a bolt of blue lightning, crumbling instantly to the ground in a cloud of dust.",
+    insights: ["Sudden upheaval", "Breaking false foundations", "The collapse of the ego structure"],
+    takeaway: "Let it fall. The foundation was built on an illusion, and this sudden destruction is a profound act of grace.",
+    reflection: "What sudden disruption in your life is actually liberating you from a trap?"
+  },
+  {
+    id: 48,
+    emblem: "The Hidden Sun",
+    vision: "A thick bank of gray clouds, but behind them, an unmistakable, radiant glow warms the entire sky.",
+    insights: ["Inner light obscured", "Truth waiting to emerge", "Temporary gloom"],
+    takeaway: "The light has not gone out; it is simply behind the clouds. Maintain your warmth until the weather breaks.",
+    reflection: "How can you generate your own internal light while waiting for the external circumstances to clear?"
+  },
+  {
+    id: 49,
+    emblem: "The Winding Spiral",
+    vision: "A staircase carved into a giant tree trunk, winding upward. You pass the same view, but from a higher elevation.",
+    insights: ["Evolutionary cycles", "Revisiting old lessons", "Progress in disguised repetition"],
+    takeaway: "You are not going backward. You are facing the same lesson from a higher level of consciousness. Apply what you know.",
+    reflection: "How are you better equipped to handle this returning issue than you were the last time?"
+  },
+  {
+    id: 50,
+    emblem: "The Crystal Prism",
+    vision: "A flawless, multi-faceted gem catching a single beam of white light and scattering it into a brilliant rainbow.",
+    insights: ["Refraction of truth", "Many valid perspectives", "Seeing the spectrum"],
+    takeaway: "There is no single truth to this situation. Allow yourself to see all the different colors and facets of the narrative.",
+    reflection: "Whose perspective in this situation are you entirely refusing to see?"
+  },
+  {
+    id: 51,
+    emblem: "The Ancient Roots",
+    vision: "A vast, interconnected network of glowing, golden roots pulsing beneath the dark soil of a quiet forest.",
+    insights: ["Ancestral wisdom", "Deep, hidden foundations", "The support of the collective past"],
+    takeaway: "You are supported by forces much older and deeper than your individual self. Draw on the strength of your lineage.",
+    reflection: "What inherited strength or ancestral resilience can you call upon today?"
+  },
+  {
+    id: 52,
+    emblem: "The Cosmic Joke",
+    vision: "A theater mask of tragedy suddenly dissolving into a mask of pure, uproarious, joyful comedy.",
+    insights: ["Divine humor", "Taking things less seriously", "The play of existence"],
+    takeaway: "The universe is playing. Zoom out far enough, and the tragedy you are obsessing over is actually a beautiful comedy.",
+    reflection: "Where can you inject a sense of humor and lightness into a situation you've made far too heavy?"
   }
 ];
 
-export default function EsotericOracle() {
-  const [step, setStep] = useState('menu'); 
-  const [audioEnabled, setAudioEnabled] = useState(false);
-  const [queryText, setQueryText] = useState('');
-  const [drawnCard, setDrawnCard] = useState(null);
-  const [copied, setCopied] = useState(false);
-  const [hoveredSeal, setHoveredSeal] = useState(null);
+export default function App() {
+  const [currentCard, setCurrentCard] = useState(null);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isDrawing, setIsDrawing] = useState(false);
 
-  const toggleAudio = () => setAudioEnabled(!audioEnabled);
-
-  const handleDirectQuerySubmit = (e) => {
-    e.preventDefault();
-    if (!queryText.trim()) return;
-    initiateReveal();
-  };
-
-  const initiateReveal = () => {
-    setStep('revealing');
-    const randomCard = ORACLE_DECK[Math.floor(Math.random() * ORACLE_DECK.length)];
-    setDrawnCard(randomCard);
+  const drawCard = () => {
+    if (isDrawing) return;
+    setIsDrawing(true);
+    setIsFlipped(false);
     
+    // Brief timeout to allow the card to flip down before changing content
     setTimeout(() => {
-      setStep('result');
-    }, 2500);
+      const randomIndex = Math.floor(Math.random() * esotericDeck.length);
+      setCurrentCard(esotericDeck[randomIndex]);
+      setIsFlipped(true);
+      setIsDrawing(false);
+    }, 400);
   };
-
-  const copyToClipboard = () => {
-    if (!drawnCard) return;
-    const text = `The Esoteric Oracle\n\nDraw: ${drawnCard.name} - ${drawnCard.theme}\n\nInsights:\n- ${drawnCard.insights.join('\n- ')}\n\nTakeaway: ${drawnCard.takeaway}\n\nReflection: ${drawnCard.question}`;
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const resetOracle = () => {
-    setStep('menu');
-    setQueryText('');
-    setDrawnCard(null);
-  };
-
-  const CardSymbol = drawnCard?.symbol || Sparkles;
 
   return (
-    <div className="relative min-h-screen bg-[#0A0B10] text-gray-200 font-sans overflow-hidden flex flex-col items-center justify-center selection:bg-purple-900/50 selection:text-[#D4AF37]">
+    <div className="min-h-screen bg-neutral-950 text-slate-300 font-sans selection:bg-amber-500/30">
       
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-900/10 blur-[120px] rounded-full opacity-50" />
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#D4AF37]/5 blur-[100px] rounded-full opacity-30" />
-        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent bg-[length:20px_20px]" />
-      </div>
-
-      <header className="absolute top-0 w-full p-6 flex justify-between items-center z-20">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-[#D4AF37]" />
-          <h1 className="font-serif tracking-widest uppercase text-sm font-medium text-gray-400">Esoteric Oracle</h1>
+      {/* Header */}
+      <header className="max-w-4xl mx-auto p-6 flex flex-col items-center justify-center space-y-4 pt-12">
+        <div className="flex items-center space-x-3 text-amber-500">
+          <Moon size={28} />
+          <h1 className="text-3xl md:text-5xl font-light tracking-widest uppercase text-center">Esoteric Oracle</h1>
+          <Sun size={28} />
         </div>
-        <button 
-          onClick={toggleAudio}
-          className="p-2 rounded-full hover:bg-white/5 transition-colors text-gray-400 hover:text-[#D4AF37] focus:outline-none focus:ring-1 focus:ring-[#D4AF37]"
-          aria-label="Toggle ambient sound"
-        >
-          {audioEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
-        </button>
+        <p className="text-slate-500 text-sm md:text-base tracking-widest uppercase text-center max-w-lg">
+          Quiet the mind. Focus on your friction. Draw from the void.
+        </p>
       </header>
 
-      <main className="relative z-10 w-full max-w-4xl px-6 flex flex-col items-center justify-center min-h-[80vh]">
+      {/* Main Content */}
+      <main className="max-w-3xl mx-auto p-6 flex flex-col items-center justify-center pb-24">
         
-        {step === 'menu' && (
-          <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-1000 space-y-12">
-            <div className="space-y-4">
-              <h2 className="font-serif text-4xl md:text-5xl text-white tracking-wide">Seek the Void</h2>
-              <p className="text-gray-400 max-w-md mx-auto leading-relaxed">
-                Choose your method of communion. Speak your intention directly, or let the aether draw for you.
-              </p>
-            </div>
+        {/* Draw Button */}
+        <button 
+          onClick={drawCard}
+          disabled={isDrawing}
+          className="mb-12 group relative px-8 py-3 bg-transparent border border-amber-500/50 text-amber-500 tracking-widest uppercase text-sm hover:bg-amber-500/10 transition-all duration-300 rounded-sm overflow-hidden"
+        >
+          <span className="relative z-10 flex items-center space-x-2">
+            <Sparkles size={16} />
+            <span>Consult the Oracle</span>
+          </span>
+        </button>
+
+        {/* Card Container */}
+        <div className="relative w-full max-w-md aspect-[2/3] perspective-1000">
+          <div 
+            className={`w-full h-full relative preserve-3d transition-transform duration-700 ease-out ${isFlipped ? 'rotate-y-180' : ''}`}
+            style={{ transformStyle: 'preserve-3d' }}
+          >
             
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <button 
-                onClick={() => setStep('query')}
-                className="group relative px-8 py-4 bg-white/5 border border-white/10 rounded-xl hover:border-[#D4AF37]/50 hover:bg-white/10 transition-all duration-300 w-64 text-left overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/0 via-[#D4AF37]/5 to-[#D4AF37]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                <h3 className="font-serif text-[#D4AF37] text-lg mb-1">Direct Query</h3>
-                <p className="text-xs text-gray-400">State your intention in words</p>
-              </button>
+            {/* Card Back (Face Down) */}
+            <div 
+              className="absolute w-full h-full backface-hidden bg-neutral-900 border border-neutral-800 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center p-8 cursor-pointer hover:border-amber-500/30 transition-colors duration-500"
+              style={{ backfaceVisibility: 'hidden' }}
+              onClick={drawCard}
+            >
+              <Eye className="text-neutral-700 mb-4 animate-pulse" size={48} />
+              <div className="w-16 h-16 border border-neutral-700 rotate-45 flex items-center justify-center">
+                <div className="w-8 h-8 border border-neutral-600 rotate-45"></div>
+              </div>
+            </div>
 
-              <button 
-                onClick={() => setStep('draw')}
-                className="group relative px-8 py-4 bg-white/5 border border-white/10 rounded-xl hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300 w-64 text-left overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/5 to-purple-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                <h3 className="font-serif text-purple-300 text-lg mb-1">Intuitive Draw</h3>
-                <p className="text-xs text-gray-400">Select from the cosmic seals</p>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {step === 'query' && (
-          <form onSubmit={handleDirectQuerySubmit} className="w-full max-w-lg animate-in fade-in zoom-in-95 duration-700 space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="font-serif text-3xl text-white mb-2">Speak Your Intention</h2>
-              <p className="text-sm text-gray-400">Focus on your friction, question, or desire.</p>
-            </div>
-            <div className="relative group">
-              <input 
-                autoFocus
-                type="text"
-                value={queryText}
-                onChange={(e) => setQueryText(e.target.value)}
-                placeholder="e.g., Why do I feel stagnant in my work?"
-                className="w-full bg-black/50 border border-white/10 focus:border-[#D4AF37] rounded-xl px-6 py-4 text-white placeholder:text-gray-600 outline-none shadow-lg focus:shadow-[0_0_20px_rgba(212,175,55,0.1)] transition-all duration-300"
-              />
-            </div>
-            <div className="flex justify-between items-center">
-              <button type="button" onClick={() => setStep('menu')} className="text-sm text-gray-500 hover:text-white transition-colors">
-                Cancel
-              </button>
-              <button 
-                type="submit" 
-                disabled={!queryText.trim()}
-                className="flex items-center gap-2 px-6 py-2 bg-[#D4AF37] text-black font-medium rounded-full disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all duration-300"
-              >
-                Consult <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </form>
-        )}
-
-        {step === 'draw' && (
-          <div className="animate-in fade-in zoom-in-95 duration-700 flex flex-col items-center w-full">
-            <h2 className="font-serif text-3xl text-white mb-12 text-center">Select a Seal</h2>
-            <div className="flex flex-col md:flex-row gap-8 justify-center items-center w-full perspective-[1000px]">
-              {[1, 2, 3].map((seal) => (
-                <button
-                  key={seal}
-                  onClick={initiateReveal}
-                  onMouseEnter={() => setHoveredSeal(seal)}
-                  onMouseLeave={() => setHoveredSeal(null)}
-                  className={`relative w-48 h-72 rounded-xl transition-all duration-500 [transform-style:preserve-3d] shadow-xl ${
-                    hoveredSeal === seal ? '-translate-y-4 shadow-[0_0_30px_rgba(139,92,246,0.3)]' : 'shadow-black/50'
-                  }`}
-                >
-                  <div className="absolute inset-0 bg-gray-900 border border-white/10 rounded-xl flex items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/20 to-transparent" />
-                    <Sparkles className={`w-8 h-8 transition-colors duration-500 ${hoveredSeal === seal ? 'text-[#D4AF37]' : 'text-purple-700/50'}`} />
-                    <div className="absolute inset-2 border border-white/5 rounded-lg" />
+            {/* Card Front (Face Up) */}
+            <div 
+              className="absolute w-full h-full backface-hidden bg-neutral-900 border border-amber-500/40 rounded-xl shadow-[0_0_40px_rgba(245,158,11,0.15)] flex flex-col p-6 md:p-8 overflow-y-auto"
+              style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+            >
+              {currentCard && (
+                <div className="flex flex-col h-full animate-fade-in">
+                  <div className="text-center mb-6">
+                    <Flame className="text-amber-500 mx-auto mb-2" size={24} />
+                    <h2 className="text-2xl text-amber-500 font-light tracking-widest uppercase">{currentCard.emblem}</h2>
                   </div>
-                </button>
-              ))}
-            </div>
-            <button onClick={() => setStep('menu')} className="mt-12 text-sm text-gray-500 hover:text-white transition-colors">
-              Return to Menu
-            </button>
-          </div>
-        )}
-
-        {step === 'revealing' && (
-          <div className="flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-500">
-            <div className="relative w-32 h-32 flex items-center justify-center">
-              <div className="absolute inset-0 border-t-2 border-[#D4AF37] rounded-full animate-spin duration-1000" />
-              <div className="absolute inset-2 border-r-2 border-purple-500 rounded-full animate-spin duration-700 direction-reverse" />
-              <Sparkles className="w-8 h-8 text-[#D4AF37] animate-pulse" />
-            </div>
-            <p className="font-serif text-gray-400 tracking-widest animate-pulse">PIERCING THE VEIL</p>
-          </div>
-        )}
-
-        {step === 'result' && drawnCard && (
-          <div className="w-full flex flex-col lg:flex-row gap-12 items-center lg:items-start animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            
-            <div className="shrink-0 perspective-[1200px] w-64 h-96 group">
-              <div className="relative w-full h-full transition-transform duration-1000 ease-out [transform-style:preserve-3d] [transform:rotateY(180deg)]">
-                <div className="absolute inset-0 bg-gray-900 border border-white/10 rounded-2xl [backface-visibility:hidden]" />
-                
-                <div className="absolute inset-0 bg-[#0c0d14] border border-[#D4AF37]/30 rounded-2xl p-6 flex flex-col items-center justify-between [backface-visibility:hidden] [transform:rotateY(180deg)] shadow-[0_0_40px_rgba(212,175,55,0.15)] overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#D4AF37]/10 via-transparent to-transparent pointer-events-none" />
                   
-                  <div className="text-xs tracking-widest text-[#D4AF37] uppercase font-medium">Draw</div>
-                  
-                  <div className="flex flex-col items-center space-y-6">
-                    <div className="w-20 h-20 rounded-full bg-black/50 border border-[#D4AF37]/20 flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.2)]">
-                      <CardSymbol className="w-8 h-8 text-[#D4AF37]" />
+                  <div className="space-y-6 flex-grow text-sm md:text-base leading-relaxed text-slate-300">
+                    <div>
+                      <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-1">The Vision</h3>
+                      <p className="italic text-slate-400">"{currentCard.vision}"</p>
                     </div>
-                    <div className="text-center space-y-2">
-                      <h3 className="font-serif text-2xl text-white">{drawnCard.name}</h3>
-                      <p className="text-xs text-purple-300 tracking-wider uppercase">{drawnCard.theme}</p>
+
+                    <div>
+                      <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-2">Core Insights</h3>
+                      <ul className="list-disc list-inside space-y-1 text-slate-400">
+                        {currentCard.insights.map((insight, idx) => (
+                          <li key={idx}>{insight}</li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-1">The Takeaway</h3>
+                      <p>{currentCard.takeaway}</p>
                     </div>
                   </div>
 
-                  <div className="text-[10px] text-gray-500 uppercase tracking-widest">Esoteric Oracle</div>
+                  <div className="mt-8 pt-6 border-t border-neutral-800 text-center">
+                    <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-2">Reflection</h3>
+                    <p className="font-medium text-amber-100">"{currentCard.reflection}"</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
-            <div className="flex-1 space-y-8 bg-white/5 border border-white/5 p-8 rounded-3xl backdrop-blur-sm">
-              
-              <div className="space-y-3">
-                <h4 className="text-xs uppercase tracking-widest text-[#D4AF37] flex items-center gap-2">
-                  <Eye className="w-4 h-4" /> The Vision
-                </h4>
-                <p className="text-gray-300 italic font-serif leading-relaxed text-lg">
-                  "{drawnCard.imagery}"
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="text-xs uppercase tracking-widest text-purple-400">Core Insight</h4>
-                <ul className="space-y-3">
-                  {drawnCard.insights.map((insight, idx) => (
-                    <li key={idx} className="flex gap-3 text-sm text-gray-300 leading-relaxed">
-                      <span className="text-[#D4AF37] block mt-0.5">•</span>
-                      <span>{insight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <h4 className="text-xs uppercase tracking-widest text-gray-500">Practical Takeaway</h4>
-                  <p className="text-sm text-gray-200 leading-relaxed">{drawnCard.takeaway}</p>
-                </div>
-                <div className="space-y-2">
-                  <h4 className="text-xs uppercase tracking-widest text-gray-500">Reflection</h4>
-                  <p className="text-sm text-white font-medium bg-black/20 p-4 rounded-xl border border-white/5">
-                    {drawnCard.question}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 pt-4 border-t border-white/5">
-                <button 
-                  onClick={resetOracle}
-                  className="flex-1 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-sm font-medium transition-colors flex justify-center items-center gap-2"
-                >
-                  <RotateCcw className="w-4 h-4" /> Draw Again
-                </button>
-                <button 
-                  onClick={copyToClipboard}
-                  className="flex-1 py-3 border border-[#D4AF37]/30 hover:bg-[#D4AF37]/10 text-[#D4AF37] rounded-xl text-sm font-medium transition-colors flex justify-center items-center gap-2"
-                >
-                  {copied ? 'Copied!' : <><Copy className="w-4 h-4" /> Copy Reading</>}
-                </button>
-              </div>
-
-            </div>
           </div>
-        )}
+        </div>
       </main>
     </div>
   );
