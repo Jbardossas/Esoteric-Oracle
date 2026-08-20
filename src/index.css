@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+html, body {
+  background-color: #000000;
+  color: #f3e8ff;
+  margin: 0;
+  padding: 0;
+  overscroll-behavior-y: none; /* Prevents rubber-band white bouncing on mobile */
+  -webkit-tap-highlight-color: transparent;
+}

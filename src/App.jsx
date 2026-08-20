@@ -447,7 +447,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-black text-purple-100 font-sans selection:bg-amber-500/30">
+    <div className="min-h-dvh bg-black text-purple-100 font-sans selection:bg-amber-500/30">
       
       {/* Header */}
       <header className="max-w-4xl mx-auto p-6 flex flex-col items-center justify-center space-y-4 pt-16">
