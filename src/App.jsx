@@ -447,13 +447,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-dvh bg-black text-purple-100 font-sans selection:bg-amber-500/30">
+    <div className="min-h-[100dvh] bg-black text-purple-100 font-sans selection:bg-amber-500/35 overflow-x-hidden flex flex-col justify-between">
       
       {/* Header */}
-      <header className="max-w-4xl mx-auto p-6 flex flex-col items-center justify-center space-y-4 pt-16">
+      <header className="max-w-4xl mx-auto p-6 flex flex-col items-center justify-center space-y-4 pt-10">
         <div className="flex items-center space-x-4 text-amber-500/80">
           <Moon size={22} className="text-amber-400/60" />
-          <h1 className="text-3xl md:text-5xl font-serif font-extralight tracking-[0.25em] md:tracking-[0.35em] uppercase text-center text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-300 to-amber-100 drop-shadow-[0_2px_15px_rgba(245,158,11,0.2)]">
+          <h1 className="text-2xl md:text-5xl font-serif font-extralight tracking-[0.25em] md:tracking-[0.35em] uppercase text-center text-transparent bg-clip-text bg-linear-to-r from-amber-100 via-amber-300 to-amber-100 drop-shadow-[0_2px_15px_rgba(245,158,11,0.2)]">
             Esoteric Oracle
           </h1>
           <Sun size={22} className="text-amber-400/60" />
@@ -463,26 +463,26 @@ export default function App() {
         </p>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-6xl mx-auto p-6 flex flex-col items-center justify-center pb-24">
+      {/* Main Content - Expanded flex-grow to center content perfectly */}
+      <main className="max-w-6xl mx-auto p-6 grow flex flex-col items-center justify-center w-full my-auto">
         
         {/* Menu State: Choosing the Draw Mode */}
         {mode === 'menu' && (
-          <div className="flex flex-col space-y-6 mt-10 w-full max-w-md animate-fade-in">
+          <div className="flex flex-col space-y-5 my-auto w-full max-w-md animate-fade-in py-6">
             <button 
               onClick={() => handleDraw(1)}
-              className="group relative px-8 py-5 bg-purple-950/20 border border-amber-500/30 text-amber-400/90 tracking-[0.2em] uppercase text-sm hover:bg-amber-500/10 hover:border-amber-500/60 transition-all duration-500 rounded-2xl overflow-hidden flex flex-col items-center shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_25px_rgba(245,158,11,0.15)]"
+              className="group relative px-8 py-4 bg-purple-950/20 border border-amber-500/30 text-amber-400/90 tracking-[0.2em] uppercase text-sm hover:bg-amber-500/10 hover:border-amber-500/60 transition-all duration-500 rounded-2xl overflow-hidden flex flex-col items-center shadow-[0_0_20px_rgba(0,0,0,0.5)]"
             >
-              <Sparkles size={20} className="mb-2 text-amber-400/80 transition-transform duration-500 group-hover:scale-110" />
+              <Sparkles size={18} className="mb-2 text-amber-400/80" />
               <span className="font-serif font-light tracking-widest mb-1 text-amber-200">Direct Query</span>
               <span className="text-xs text-purple-300/50 font-sans tracking-normal capitalize">Focus & draw a single card</span>
             </button>
 
             <button 
               onClick={() => handleDraw(3)}
-              className="group relative px-8 py-5 bg-purple-950/20 border border-amber-500/30 text-amber-400/90 tracking-[0.2em] uppercase text-sm hover:bg-amber-500/10 hover:border-amber-500/60 transition-all duration-500 rounded-2xl overflow-hidden flex flex-col items-center shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_25px_rgba(245,158,11,0.15)]"
+              className="group relative px-8 py-4 bg-purple-950/20 border border-amber-500/30 text-amber-400/90 tracking-[0.2em] uppercase text-sm hover:bg-amber-500/10 hover:border-amber-500/60 transition-all duration-500 rounded-2xl overflow-hidden flex flex-col items-center shadow-[0_0_20px_rgba(0,0,0,0.5)]"
             >
-              <Flame size={20} className="mb-2 text-amber-400/80 transition-transform duration-500 group-hover:scale-110" />
+              <Flame size={18} className="mb-2 text-amber-400/80" />
               <span className="font-serif font-light tracking-widest mb-1 text-amber-200">Intuitive Pull</span>
               <span className="text-xs text-purple-300/50 font-sans tracking-normal capitalize">Draw 3 interacting archetypes</span>
             </button>
@@ -491,10 +491,10 @@ export default function App() {
 
         {/* Active Draw State: Cards on the Table */}
         {mode !== 'menu' && (
-          <div className="w-full flex flex-col items-center animate-fade-in">
+          <div className="w-full flex flex-col items-center animate-fade-in py-4">
             <button 
               onClick={reset}
-              className="mb-12 px-6 py-2 rounded-full border border-purple-900/40 bg-purple-950/20 text-xs tracking-[0.25em] uppercase text-purple-300/60 hover:text-amber-300 hover:border-amber-500/40 transition-all duration-300 shadow-sm"
+              className="mb-8 px-6 py-2 rounded-full border border-purple-900/40 bg-purple-950/20 text-xs tracking-[0.25em] uppercase text-purple-300/60 hover:text-amber-300 hover:border-amber-500/40 transition-all duration-300 shadow-sm"
             >
               Return to the Void
             </button>
@@ -502,7 +502,7 @@ export default function App() {
             {/* Card Grid */}
             <div className={`flex flex-col lg:flex-row gap-8 justify-center items-center w-full ${mode === 'single' ? 'max-w-md' : 'max-w-6xl'}`}>
               {drawnCards.map((card, idx) => (
-                <div key={card.id} className="relative w-full max-w-sm aspect-2/3 perspective-1000">
+                <div key={card.id} className="relative w-full max-w-sm aspect-[2/3] perspective-1000">
                   <div 
                     className={`w-full h-full relative preserve-3d transition-transform duration-700 ease-out ${flippedStates[idx] ? 'rotate-y-180' : ''}`}
                     style={{ transformStyle: 'preserve-3d' }}
@@ -510,7 +510,7 @@ export default function App() {
                     
                     {/* Card Back (Face Down) */}
                     <div 
-                      className="absolute w-full h-full backface-hidden bg-neutral-950 border border-purple-900/30 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.8)] flex flex-col items-center justify-center p-8 cursor-pointer hover:border-amber-500/40 hover:shadow-[0_0_40px_rgba(245,158,11,0.1)] transition-all duration-500 group"
+                      className="absolute w-full h-full backface-hidden bg-neutral-950 border border-purple-900/30 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.8)] flex flex-col items-center justify-center p-8 cursor-pointer hover:border-amber-500/40 transition-all duration-500 group"
                       style={{ backfaceVisibility: 'hidden' }}
                       onClick={() => flipCard(idx)}
                     >
@@ -518,7 +518,7 @@ export default function App() {
                       <div className="w-16 h-16 border border-purple-900/50 group-hover:border-amber-500/40 rotate-45 flex items-center justify-center transition-colors duration-500 rounded-lg">
                         <div className="w-8 h-8 border border-purple-900/30 group-hover:border-amber-500/30 rotate-45 transition-colors duration-500 rounded-md"></div>
                       </div>
-                      <span className="absolute bottom-8 text-xs tracking-[0.25em] uppercase text-purple-700/60 group-hover:text-amber-500/50 transition-colors duration-500 font-serif">
+                      <span className="absolute bottom-8 text-xs tracking-[0.25em] uppercase text-purple-700/60 group-hover:text-amber-500/50 font-serif">
                         Reveal
                       </span>
                     </div>
@@ -534,7 +534,7 @@ export default function App() {
                           <h2 className="text-xl md:text-2xl text-amber-300 font-serif font-light tracking-widest uppercase leading-tight">{card.emblem}</h2>
                         </div>
                         
-                        <div className="space-y-5 grow text-sm leading-relaxed text-purple-100/90">
+                        <div className="space-y-5 flex-grow text-sm leading-relaxed text-purple-100/90">
                           <div>
                             <h3 className="text-xs text-amber-500/60 uppercase tracking-widest mb-1 font-serif">The Vision</h3>
                             <p className="italic text-purple-200/70">"{card.vision}"</p>
@@ -569,6 +569,11 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {/* Subtle Footer Spacing to balance layout */}
+      <footer className="py-4 text-center text-purple-900/40 text-[10px] tracking-widest uppercase">
+        Esoteric Oracle
+      </footer>
     </div>
   );
 }
