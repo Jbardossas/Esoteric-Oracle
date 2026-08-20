@@ -419,24 +419,31 @@ const esotericDeck = [
     reflection: "Where can you inject a sense of humor and lightness into a situation you've made far too heavy?"
   }
 ];
-
 export default function App() {
-  const [currentCard, setCurrentCard] = useState(null);
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const [mode, setMode] = useState('menu'); // 'menu', 'single', 'three'
+  const [drawnCards, setDrawnCards] = useState([]);
+  const [flippedStates, setFlippedStates] = useState([]);
 
-  const drawCard = () => {
-    if (isDrawing) return;
-    setIsDrawing(true);
-    setIsFlipped(false);
-    
-    // Brief timeout to allow the card to flip down before changing content
-    setTimeout(() => {
-      const randomIndex = Math.floor(Math.random() * esotericDeck.length);
-      setCurrentCard(esotericDeck[randomIndex]);
-      setIsFlipped(true);
-      setIsDrawing(false);
-    }, 400);
+  // Shuffle the deck and draw the requested number of unique cards
+  const handleDraw = (count) => {
+    const shuffled = [...esotericDeck].sort(() => 0.5 - Math.random());
+    setDrawnCards(shuffled.slice(0, count));
+    setFlippedStates(new Array(count).fill(false)); // Deal them face down
+    setMode(count === 1 ? 'single' : 'three');
+  };
+
+  // Flip an individual card when the user clicks it
+  const flipCard = (index) => {
+    if (flippedStates[index]) return;
+    const newFlipped = [...flippedStates];
+    newFlipped[index] = true;
+    setFlippedStates(newFlipped);
+  };
+
+  const reset = () => {
+    setMode('menu');
+    setDrawnCards([]);
+    setFlippedStates([]);
   };
 
   return (
@@ -455,82 +462,110 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-3xl mx-auto p-6 flex flex-col items-center justify-center pb-24">
+      <main className="max-w-6xl mx-auto p-6 flex flex-col items-center justify-center pb-24">
         
-        {/* Draw Button */}
-        <button 
-          onClick={drawCard}
-          disabled={isDrawing}
-          className="mb-12 group relative px-8 py-3 bg-transparent border border-amber-500/50 text-amber-500 tracking-widest uppercase text-sm hover:bg-amber-500/10 transition-all duration-300 rounded-sm overflow-hidden"
-        >
-          <span className="relative z-10 flex items-center space-x-2">
-            <Sparkles size={16} />
-            <span>Consult the Oracle</span>
-          </span>
-        </button>
-
-        {/* Card Container */}
-        <div className="relative w-full max-w-md aspect-[2/3] perspective-1000">
-          <div 
-            className={`w-full h-full relative preserve-3d transition-transform duration-700 ease-out ${isFlipped ? 'rotate-y-180' : ''}`}
-            style={{ transformStyle: 'preserve-3d' }}
-          >
-            
-            {/* Card Back (Face Down) */}
-            <div 
-              className="absolute w-full h-full backface-hidden bg-neutral-900 border border-neutral-800 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center p-8 cursor-pointer hover:border-amber-500/30 transition-colors duration-500"
-              style={{ backfaceVisibility: 'hidden' }}
-              onClick={drawCard}
+        {/* Menu State: Choosing the Draw Mode */}
+        {mode === 'menu' && (
+          <div className="flex flex-col space-y-6 mt-8 w-full max-w-md animate-fade-in">
+            <button 
+              onClick={() => handleDraw(1)}
+              className="group relative px-8 py-4 bg-transparent border border-amber-500/50 text-amber-500 tracking-widest uppercase text-sm hover:bg-amber-500/10 transition-all duration-300 rounded-sm overflow-hidden flex flex-col items-center"
             >
-              <Eye className="text-neutral-700 mb-4 animate-pulse" size={48} />
-              <div className="w-16 h-16 border border-neutral-700 rotate-45 flex items-center justify-center">
-                <div className="w-8 h-8 border border-neutral-600 rotate-45"></div>
-              </div>
-            </div>
+              <Sparkles size={20} className="mb-2" />
+              <span className="font-semibold mb-1">Direct Query</span>
+              <span className="text-xs text-amber-500/70">Focus & draw a single card</span>
+            </button>
 
-            {/* Card Front (Face Up) */}
-            <div 
-              className="absolute w-full h-full backface-hidden bg-neutral-900 border border-amber-500/40 rounded-xl shadow-[0_0_40px_rgba(245,158,11,0.15)] flex flex-col p-6 md:p-8 overflow-y-auto"
-              style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+            <button 
+              onClick={() => handleDraw(3)}
+              className="group relative px-8 py-4 bg-transparent border border-amber-500/50 text-amber-500 tracking-widest uppercase text-sm hover:bg-amber-500/10 transition-all duration-300 rounded-sm overflow-hidden flex flex-col items-center"
             >
-              {currentCard && (
-                <div className="flex flex-col h-full animate-fade-in">
-                  <div className="text-center mb-6">
-                    <Flame className="text-amber-500 mx-auto mb-2" size={24} />
-                    <h2 className="text-2xl text-amber-500 font-light tracking-widest uppercase">{currentCard.emblem}</h2>
-                  </div>
-                  
-                  <div className="space-y-6 flex-grow text-sm md:text-base leading-relaxed text-slate-300">
-                    <div>
-                      <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-1">The Vision</h3>
-                      <p className="italic text-slate-400">"{currentCard.vision}"</p>
+              <Flame size={20} className="mb-2" />
+              <span className="font-semibold mb-1">Intuitive Pull</span>
+              <span className="text-xs text-amber-500/70">Draw 3 cards for past, present, future</span>
+            </button>
+          </div>
+        )}
+
+        {/* Active Draw State: Cards on the Table */}
+        {mode !== 'menu' && (
+          <div className="w-full flex flex-col items-center animate-fade-in">
+            <button 
+              onClick={reset}
+              className="mb-12 text-xs tracking-widest uppercase text-slate-500 hover:text-amber-500 transition-colors duration-300"
+            >
+              [ Return to the Void ]
+            </button>
+
+            {/* Card Grid - dynamically adjusts for 1 or 3 cards */}
+            <div className={`flex flex-col lg:flex-row gap-8 justify-center items-center w-full ${mode === 'single' ? 'max-w-md' : 'max-w-6xl'}`}>
+              {drawnCards.map((card, idx) => (
+                <div key={card.id} className="relative w-full max-w-sm aspect-[2/3] perspective-1000">
+                  <div 
+                    className={`w-full h-full relative preserve-3d transition-transform duration-700 ease-out ${flippedStates[idx] ? 'rotate-y-180' : ''}`}
+                    style={{ transformStyle: 'preserve-3d' }}
+                  >
+                    
+                    {/* Card Back (Face Down) */}
+                    <div 
+                      className="absolute w-full h-full backface-hidden bg-neutral-900 border border-neutral-800 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center p-8 cursor-pointer hover:border-amber-500/50 transition-colors duration-500 group"
+                      style={{ backfaceVisibility: 'hidden' }}
+                      onClick={() => flipCard(idx)}
+                    >
+                      <Eye className="text-neutral-700 group-hover:text-amber-500/70 mb-4 transition-colors duration-500" size={48} />
+                      <div className="w-16 h-16 border border-neutral-700 group-hover:border-amber-500/50 rotate-45 flex items-center justify-center transition-colors duration-500">
+                        <div className="w-8 h-8 border border-neutral-600 group-hover:border-amber-500/30 rotate-45 transition-colors duration-500"></div>
+                      </div>
+                      <span className="absolute bottom-8 text-xs tracking-widest uppercase text-neutral-600 group-hover:text-amber-500/50 transition-colors duration-500">
+                        Reveal
+                      </span>
                     </div>
 
-                    <div>
-                      <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-2">Core Insights</h3>
-                      <ul className="list-disc list-inside space-y-1 text-slate-400">
-                        {currentCard.insights.map((insight, idx) => (
-                          <li key={idx}>{insight}</li>
-                        ))}
-                      </ul>
+                    {/* Card Front (Face Up) */}
+                    <div 
+                      className="absolute w-full h-full backface-hidden bg-neutral-900 border border-amber-500/40 rounded-xl shadow-[0_0_40px_rgba(245,158,11,0.15)] flex flex-col p-6 md:p-8 overflow-y-auto"
+                      style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+                    >
+                      <div className="flex flex-col h-full animate-fade-in">
+                        <div className="text-center mb-6">
+                          <Flame className="text-amber-500 mx-auto mb-2" size={24} />
+                          <h2 className="text-xl md:text-2xl text-amber-500 font-light tracking-widest uppercase leading-tight">{card.emblem}</h2>
+                        </div>
+                        
+                        <div className="space-y-5 flex-grow text-sm leading-relaxed text-slate-300">
+                          <div>
+                            <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-1">The Vision</h3>
+                            <p className="italic text-slate-400">"{card.vision}"</p>
+                          </div>
+
+                          <div>
+                            <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-2">Core Insights</h3>
+                            <ul className="list-disc list-inside space-y-1 text-slate-400">
+                              {card.insights.map((insight, i) => (
+                                <li key={i}>{insight}</li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div>
+                            <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-1">The Takeaway</h3>
+                            <p>{card.takeaway}</p>
+                          </div>
+                        </div>
+
+                        <div className="mt-6 pt-5 border-t border-neutral-800 text-center">
+                          <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-2">Reflection</h3>
+                          <p className="font-medium text-amber-100 text-sm">"{card.reflection}"</p>
+                        </div>
+                      </div>
                     </div>
 
-                    <div>
-                      <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-1">The Takeaway</h3>
-                      <p>{currentCard.takeaway}</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 pt-6 border-t border-neutral-800 text-center">
-                    <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-2">Reflection</h3>
-                    <p className="font-medium text-amber-100">"{currentCard.reflection}"</p>
                   </div>
                 </div>
-              )}
+              ))}
             </div>
-
           </div>
-        </div>
+        )}
       </main>
     </div>
   );
