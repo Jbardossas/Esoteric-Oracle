@@ -447,7 +447,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-slate-300 font-sans selection:bg-amber-500/30">
+    <div className="min-h-screen bg-purple-950 text-purple-100 font-sans selection:bg-amber-500/30">
       
       {/* Header */}
       <header className="max-w-4xl mx-auto p-6 flex flex-col items-center justify-center space-y-4 pt-12">
@@ -456,7 +456,7 @@ export default function App() {
           <h1 className="text-3xl md:text-5xl font-light tracking-widest uppercase text-center">Esoteric Oracle</h1>
           <Sun size={28} />
         </div>
-        <p className="text-slate-500 text-sm md:text-base tracking-widest uppercase text-center max-w-lg">
+        <p className="text-purple-300 text-sm md:text-base tracking-widest uppercase text-center max-w-lg">
           Quiet the mind. Focus on your friction. Draw from the void.
         </p>
       </header>
@@ -469,7 +469,7 @@ export default function App() {
           <div className="flex flex-col space-y-6 mt-8 w-full max-w-md animate-fade-in">
             <button 
               onClick={() => handleDraw(1)}
-              className="group relative px-8 py-4 bg-transparent border border-amber-500/50 text-amber-500 tracking-widest uppercase text-sm hover:bg-amber-500/10 transition-all duration-300 rounded-sm overflow-hidden flex flex-col items-center"
+              className="group relative px-8 py-4 bg-transparent border border-amber-500/50 text-amber-500 tracking-widest uppercase text-sm hover:bg-amber-500/20 transition-all duration-300 rounded-sm overflow-hidden flex flex-col items-center"
             >
               <Sparkles size={20} className="mb-2" />
               <span className="font-semibold mb-1">Direct Query</span>
@@ -478,11 +478,11 @@ export default function App() {
 
             <button 
               onClick={() => handleDraw(3)}
-              className="group relative px-8 py-4 bg-transparent border border-amber-500/50 text-amber-500 tracking-widest uppercase text-sm hover:bg-amber-500/10 transition-all duration-300 rounded-sm overflow-hidden flex flex-col items-center"
+              className="group relative px-8 py-4 bg-transparent border border-amber-500/50 text-amber-500 tracking-widest uppercase text-sm hover:bg-amber-500/20 transition-all duration-300 rounded-sm overflow-hidden flex flex-col items-center"
             >
               <Flame size={20} className="mb-2" />
               <span className="font-semibold mb-1">Intuitive Pull</span>
-              <span className="text-xs text-amber-500/70">Draw 3 cards for past, present, future</span>
+              <span className="text-xs text-amber-500/70">Draw 3 interacting archetypes</span>
             </button>
           </div>
         )}
@@ -492,7 +492,7 @@ export default function App() {
           <div className="w-full flex flex-col items-center animate-fade-in">
             <button 
               onClick={reset}
-              className="mb-12 text-xs tracking-widest uppercase text-slate-500 hover:text-amber-500 transition-colors duration-300"
+              className="mb-12 text-xs tracking-widest uppercase text-purple-400 hover:text-amber-500 transition-colors duration-300"
             >
               [ Return to the Void ]
             </button>
@@ -508,22 +508,22 @@ export default function App() {
                     
                     {/* Card Back (Face Down) */}
                     <div 
-                      className="absolute w-full h-full backface-hidden bg-neutral-900 border border-neutral-800 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center p-8 cursor-pointer hover:border-amber-500/50 transition-colors duration-500 group"
+                      className="absolute w-full h-full backface-hidden bg-purple-900 border border-purple-800 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center p-8 cursor-pointer hover:border-amber-500/50 hover:shadow-[0_0_40px_rgba(245,158,11,0.2)] transition-all duration-500 group"
                       style={{ backfaceVisibility: 'hidden' }}
                       onClick={() => flipCard(idx)}
                     >
-                      <Eye className="text-neutral-700 group-hover:text-amber-500/70 mb-4 transition-colors duration-500" size={48} />
-                      <div className="w-16 h-16 border border-neutral-700 group-hover:border-amber-500/50 rotate-45 flex items-center justify-center transition-colors duration-500">
-                        <div className="w-8 h-8 border border-neutral-600 group-hover:border-amber-500/30 rotate-45 transition-colors duration-500"></div>
+                      <Eye className="text-purple-700 group-hover:text-amber-500/70 mb-4 transition-colors duration-500" size={48} />
+                      <div className="w-16 h-16 border border-purple-700 group-hover:border-amber-500/50 rotate-45 flex items-center justify-center transition-colors duration-500">
+                        <div className="w-8 h-8 border border-purple-600 group-hover:border-amber-500/30 rotate-45 transition-colors duration-500"></div>
                       </div>
-                      <span className="absolute bottom-8 text-xs tracking-widest uppercase text-neutral-600 group-hover:text-amber-500/50 transition-colors duration-500">
+                      <span className="absolute bottom-8 text-xs tracking-widest uppercase text-purple-500 group-hover:text-amber-500/50 transition-colors duration-500">
                         Reveal
                       </span>
                     </div>
 
                     {/* Card Front (Face Up) */}
                     <div 
-                      className="absolute w-full h-full backface-hidden bg-neutral-900 border border-amber-500/40 rounded-xl shadow-[0_0_40px_rgba(245,158,11,0.15)] flex flex-col p-6 md:p-8 overflow-y-auto"
+                      className="absolute w-full h-full backface-hidden bg-purple-900 border border-amber-500/50 rounded-xl shadow-[0_0_40px_rgba(245,158,11,0.2)] flex flex-col p-6 md:p-8 overflow-y-auto"
                       style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
                     >
                       <div className="flex flex-col h-full animate-fade-in">
@@ -532,15 +532,15 @@ export default function App() {
                           <h2 className="text-xl md:text-2xl text-amber-500 font-light tracking-widest uppercase leading-tight">{card.emblem}</h2>
                         </div>
                         
-                        <div className="space-y-5 flex-grow text-sm leading-relaxed text-slate-300">
+                        <div className="space-y-5 flex-grow text-sm leading-relaxed text-purple-100">
                           <div>
-                            <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-1">The Vision</h3>
-                            <p className="italic text-slate-400">"{card.vision}"</p>
+                            <h3 className="text-xs text-amber-500/80 uppercase tracking-widest mb-1">The Vision</h3>
+                            <p className="italic text-purple-200">"{card.vision}"</p>
                           </div>
 
                           <div>
-                            <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-2">Core Insights</h3>
-                            <ul className="list-disc list-inside space-y-1 text-slate-400">
+                            <h3 className="text-xs text-amber-500/80 uppercase tracking-widest mb-2">Core Insights</h3>
+                            <ul className="list-disc list-inside space-y-1 text-purple-200">
                               {card.insights.map((insight, i) => (
                                 <li key={i}>{insight}</li>
                               ))}
@@ -548,14 +548,14 @@ export default function App() {
                           </div>
 
                           <div>
-                            <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-1">The Takeaway</h3>
+                            <h3 className="text-xs text-amber-500/80 uppercase tracking-widest mb-1">The Takeaway</h3>
                             <p>{card.takeaway}</p>
                           </div>
                         </div>
 
-                        <div className="mt-6 pt-5 border-t border-neutral-800 text-center">
-                          <h3 className="text-xs text-amber-500/70 uppercase tracking-widest mb-2">Reflection</h3>
-                          <p className="font-medium text-amber-100 text-sm">"{card.reflection}"</p>
+                        <div className="mt-6 pt-5 border-t border-purple-800 text-center">
+                          <h3 className="text-xs text-amber-500/80 uppercase tracking-widest mb-2">Reflection</h3>
+                          <p className="font-medium text-amber-200 text-sm">"{card.reflection}"</p>
                         </div>
                       </div>
                     </div>
