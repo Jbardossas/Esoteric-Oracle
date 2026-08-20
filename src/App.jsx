@@ -502,7 +502,7 @@ export default function App() {
             {/* Card Grid */}
             <div className={`flex flex-col lg:flex-row gap-8 justify-center items-center w-full ${mode === 'single' ? 'max-w-md' : 'max-w-6xl'}`}>
               {drawnCards.map((card, idx) => (
-                <div key={card.id} className="relative w-full max-w-sm aspect-[2/3] perspective-1000">
+                <div key={card.id} className="relative w-full max-w-sm aspect-2/3 perspective-1000">
                   <div 
                     className={`w-full h-full relative preserve-3d transition-transform duration-700 ease-out ${flippedStates[idx] ? 'rotate-y-180' : ''}`}
                     style={{ transformStyle: 'preserve-3d' }}
@@ -534,7 +534,7 @@ export default function App() {
                           <h2 className="text-xl md:text-2xl text-amber-300 font-serif font-light tracking-widest uppercase leading-tight">{card.emblem}</h2>
                         </div>
                         
-                        <div className="space-y-5 flex-grow text-sm leading-relaxed text-purple-100/90">
+                        <div className="space-y-5 grow text-sm leading-relaxed text-purple-100/90">
                           <div>
                             <h3 className="text-xs text-amber-500/60 uppercase tracking-widest mb-1 font-serif">The Vision</h3>
                             <p className="italic text-purple-200/70">"{card.vision}"</p>
