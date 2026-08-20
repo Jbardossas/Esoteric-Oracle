@@ -447,13 +447,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-black text-purple-100 font-sans selection:bg-amber-500/35 overflow-x-hidden flex flex-col justify-between">
+    <div className="fixed inset-0 bg-black text-purple-100 font-sans selection:bg-amber-500/35 overflow-y-auto flex flex-col justify-between pb-[env(safe-area-inset-bottom)]">
       
       {/* Header */}
-      <header className="max-w-4xl mx-auto p-6 flex flex-col items-center justify-center space-y-4 pt-10">
+      <header className="max-w-4xl mx-auto p-6 flex flex-col items-center justify-center space-y-4 pt-10 shrink-0">
         <div className="flex items-center space-x-4 text-amber-500/80">
           <Moon size={22} className="text-amber-400/60" />
-          <h1 className="text-2xl md:text-5xl font-serif font-extralight tracking-[0.25em] md:tracking-[0.35em] uppercase text-center text-transparent bg-clip-text bg-linear-to-r from-amber-100 via-amber-300 to-amber-100 drop-shadow-[0_2px_15px_rgba(245,158,11,0.2)]">
+          <h1 className="text-2xl md:text-5xl font-serif font-extralight tracking-[0.25em] md:tracking-[0.35em] uppercase text-center text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-300 to-amber-100 drop-shadow-[0_2px_15px_rgba(245,158,11,0.2)]">
             Esoteric Oracle
           </h1>
           <Sun size={22} className="text-amber-400/60" />
@@ -463,8 +463,8 @@ export default function App() {
         </p>
       </header>
 
-      {/* Main Content - Expanded flex-grow to center content perfectly */}
-      <main className="max-w-6xl mx-auto p-6 grow flex flex-col items-center justify-center w-full my-auto">
+      {/* Main Content */}
+      <main className="max-w-6xl mx-auto p-6 flex-grow flex flex-col items-center justify-center w-full my-auto">
         
         {/* Menu State: Choosing the Draw Mode */}
         {mode === 'menu' && (
@@ -570,8 +570,8 @@ export default function App() {
         )}
       </main>
 
-      {/* Subtle Footer Spacing to balance layout */}
-      <footer className="py-4 text-center text-purple-900/40 text-[10px] tracking-widest uppercase">
+      {/* Footer */}
+      <footer className="py-3 text-center text-purple-900/40 text-[10px] tracking-widest uppercase shrink-0">
         Esoteric Oracle
       </footer>
     </div>
